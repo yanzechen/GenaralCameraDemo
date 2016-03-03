@@ -33,7 +33,7 @@
     <ClInclude Include="Resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="GenaralCamera.h">
+    <ClInclude Include="GeneralCamera.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>

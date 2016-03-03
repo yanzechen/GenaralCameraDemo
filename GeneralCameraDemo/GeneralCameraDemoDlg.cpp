@@ -7,7 +7,7 @@
 #include "GeneralCameraDemoDlg.h"
 #include "afxdialogex.h"
 
-#include "GenaralCamera.h"
+#include "GeneralCamera.h"
 
 #pragma comment(lib,"GeneralCamera.lib") 
 
@@ -45,9 +45,11 @@ BEGIN_MESSAGE_MAP(CGeneralCameraDemoDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON6, &CGeneralCameraDemoDlg::OnBnClickedButton6)
 	ON_BN_CLICKED(IDC_BUTTON7, &CGeneralCameraDemoDlg::OnBnClickedButton7)
 	ON_BN_CLICKED(IDC_BUTTON8, &CGeneralCameraDemoDlg::OnBnClickedButton8)
+	ON_BN_CLICKED(IDC_BUTTON9, &CGeneralCameraDemoDlg::OnBnClickedButton9)
+	ON_BN_CLICKED(IDC_BUTTON10, &CGeneralCameraDemoDlg::OnBnClickedButton10)
 END_MESSAGE_MAP()
 
-int CALLBACK pThread1(BYTE* pData, LONG BufferLength)
+int CALLBACK pThread1(BYTE* pData, LONG BufferLength, VOID* pVoid)
 {
 	//TRACE("pThread1 %d\n", BufferLength);
 	CString FileName;
@@ -83,6 +85,7 @@ BOOL CGeneralCameraDemoDlg::OnInitDialog()
 
 	i = CameraInit(0,
 		pThread1,
+		NULL,
 		GetDlgItem(IDC_SHOW)->m_hWnd
 		);
 
@@ -135,6 +138,7 @@ void CGeneralCameraDemoDlg::OnBnClickedButton1()
 	{
 		i = CameraInit(0,
 			pThread1,
+			NULL,
 			GetDlgItem(IDC_SHOW)->m_hWnd);
 		i = CameraPlay(0);
 	}
@@ -185,12 +189,16 @@ void CGeneralCameraDemoDlg::OnBnClickedButton5()
 	COLORSPACE iColor;
 	long lWidth, lHeight = 0;
 
+	CString tempStr, OutStr;
 	int i = GetPreviewResolutionCount(0, &iCount);
 	for (int i = 0; i < iCount; i++)
 	{
 		GetPreviewResolutionInfo(0, i, &iColor, &lWidth, &lHeight);
+		tempStr.Format(L"No.%d: Color:%d Solution:%d*%d \r\n", i, iColor, lWidth, lHeight);
+		OutStr += tempStr;
 	}
 	UpdateData(FALSE);
+	MessageBox(OutStr, NULL, NULL);
 }
 
 
@@ -221,4 +229,39 @@ void CGeneralCameraDemoDlg::OnBnClickedButton8()
 	{
 		MessageBox(L"Failed", NULL, NULL);
 	}
+}
+
+
+void CGeneralCameraDemoDlg::OnBnClickedButton9()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	long iCount = 0;
+	COLORSPACE iColor;
+	long lWidth, lHeight = 0;
+
+	CString tempStr, OutStr;
+	int i = GetStillResolutionCount(0, &iCount);
+	for (int i = 0; i < iCount; i++)
+	{
+		GetStillResolutionInfo(0, i, &iColor, &lWidth, &lHeight);
+		tempStr.Format(L"No.%d: Color:%d Solution:%d*%d \r\n", i, iColor, lWidth, lHeight);
+		OutStr += tempStr;
+	}
+	UpdateData(FALSE);
+	MessageBox(OutStr, NULL, NULL);
+}
+
+
+void CGeneralCameraDemoDlg::OnBnClickedButton10()
+{
+	// TODO:  在此添加控件通知处理程序代码
+	LONG  iMin, iMax, iStep, iDefault, iFlag = 0;
+	CString strTemp;
+	int iIndex = 0;
+	int i = CameraPropertyGetRange(0, (CAMERA_PROPERTY)iIndex, &iMin, &iMax, &iStep, &iDefault, (CONTROL_FLAGS*)&iFlag);
+	if (i == 1)
+		strTemp.Format(L"Control:%d: Min:%d Max:%d Step:%d Default:%d Flag:%d \r\n", iIndex, iMin, iMax, iStep, iDefault, iFlag);
+	else
+		strTemp += "Negative!\r\n";
+	MessageBox(strTemp, NULL, NULL);
 }

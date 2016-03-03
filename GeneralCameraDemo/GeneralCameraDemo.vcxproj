@@ -103,7 +103,7 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="GenaralCamera.h" />
+    <ClInclude Include="GeneralCamera.h" />
     <ClInclude Include="GeneralCameraDemo.h" />
     <ClInclude Include="GeneralCameraDemoDlg.h" />
     <ClInclude Include="Resource.h" />
